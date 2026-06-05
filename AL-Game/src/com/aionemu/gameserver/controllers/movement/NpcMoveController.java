@@ -62,6 +62,7 @@ public class NpcMoveController
     private boolean cachedPathValid;
     private float[][] cachedPath;
     private FollowMotor _followMotor;
+    private boolean startMove = false;
 
     public NpcMoveController(Npc owner) {
         super(owner);
@@ -96,6 +97,7 @@ public class NpcMoveController
             destination = Destination.TARGET_OBJECT;
             updateLastMove();
             MoveTaskManager.getInstance().addCreature(owner);
+            startMove = true;
         }
     }
 
@@ -110,6 +112,7 @@ public class NpcMoveController
             pointZ = z;
             updateLastMove();
             MoveTaskManager.getInstance().addCreature(owner);
+            startMove = true;
         }
     }
 
@@ -127,6 +130,7 @@ public class NpcMoveController
             pointZ = z;
             updateLastMove();
             MoveTaskManager.getInstance().addCreature(owner);
+            startMove = true;
         }
     }
 
@@ -138,6 +142,7 @@ public class NpcMoveController
             destination = Destination.POINT;
             updateLastMove();
             MoveTaskManager.getInstance().addCreature(owner);
+            startMove = true;
         }
     }
 
@@ -366,7 +371,8 @@ public class NpcMoveController
     }
 
     private byte getMoveMask(boolean directionChanged) {
-        if (directionChanged) {
+        if (directionChanged || startMove) {
+            startMove = false;
             return MovementMask.NPC_STARTMOVE;
         }
         if (((Npc)this.owner).getAi2().getState() == AIState.RETURNING) {
